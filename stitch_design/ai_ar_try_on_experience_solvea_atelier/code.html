@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;600;700&amp;family=Libre+Caslon+Text:ital,wght@0,400;0,700;1,400&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "inverse-surface": "#30312f",
+                    "tertiary-container": "#631f20",
+                    "stone-gray": "#E8E4DF",
+                    "on-tertiary-container": "#e58482",
+                    "on-primary": "#ffffff",
+                    "primary-container": "#3d3531",
+                    "charcoal-brown": "#3D3531",
+                    "surface-container-high": "#eae8e5",
+                    "on-background": "#1b1c1a",
+                    "surface-container-highest": "#e4e2df",
+                    "surface-container": "#efeeeb",
+                    "primary": "#27201c",
+                    "on-tertiary-fixed": "#3e0308",
+                    "secondary-fixed-dim": "#e0c1a1",
+                    "vintage-burgundy": "#7A3030",
+                    "secondary": "#715a40",
+                    "on-surface-variant": "#4e4541",
+                    "inverse-on-surface": "#f2f0ed",
+                    "tertiary-fixed-dim": "#ffb3b0",
+                    "surface-variant": "#e4e2df",
+                    "surface-dim": "#dbdad7",
+                    "on-error": "#ffffff",
+                    "outline": "#7f7570",
+                    "on-primary-container": "#a99d98",
+                    "surface": "#fbf9f6",
+                    "secondary-container": "#fadab9",
+                    "ivory-base": "#F7F5F2",
+                    "surface-tint": "#665c58",
+                    "secondary-fixed": "#fdddbc",
+                    "primary-fixed": "#eee0da",
+                    "tertiary-fixed": "#ffdad8",
+                    "graphite": "#5E5E5E",
+                    "on-tertiary": "#ffffff",
+                    "tertiary": "#46090d",
+                    "surface-white": "#FFFFFF",
+                    "on-secondary-fixed-variant": "#58432b",
+                    "surface-container-low": "#f5f3f0",
+                    "outline-variant": "#d1c4be",
+                    "surface-container-lowest": "#ffffff",
+                    "on-secondary-container": "#765e44",
+                    "champagne-gold": "#B89C7E",
+                    "on-tertiary-fixed-variant": "#782f2f",
+                    "error-container": "#ffdad6",
+                    "on-error-container": "#93000a",
+                    "background": "#fbf9f6",
+                    "on-secondary": "#ffffff",
+                    "on-primary-fixed-variant": "#4e4541",
+                    "on-primary-fixed": "#211a17",
+                    "inverse-primary": "#d1c4be",
+                    "error": "#ba1a1a",
+                    "surface-bright": "#fbf9f6",
+                    "on-surface": "#1b1c1a",
+                    "on-secondary-fixed": "#281805",
+                    "primary-fixed-dim": "#d1c4be",
+                    "muted-bronze": "#8E735B"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.125rem",
+                    "lg": "0.25rem",
+                    "xl": "0.5rem",
+                    "full": "0.75rem"
+            },
+            "spacing": {
+                    "margin-desktop": "64px",
+                    "gutter": "24px",
+                    "container-max": "1280px",
+                    "unit": "8px",
+                    "margin-mobile": "20px"
+            },
+            "fontFamily": {
+                    "label-md": ["Hanken Grotesk"],
+                    "label-lg": ["Hanken Grotesk"],
+                    "headline-lg": ["Libre Caslon Text"],
+                    "body-lg": ["Hanken Grotesk"],
+                    "price-display": ["Hanken Grotesk"],
+                    "body-md": ["Hanken Grotesk"],
+                    "headline-xl-mobile": ["Libre Caslon Text"],
+                    "headline-xl": ["Libre Caslon Text"],
+                    "headline-md": ["Libre Caslon Text"]
+            },
+            "fontSize": {
+                    "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.04em", "fontWeight": "500"}],
+                    "label-lg": ["14px", {"lineHeight": "20px", "letterSpacing": "0.02em", "fontWeight": "600"}],
+                    "headline-lg": ["32px", {"lineHeight": "40px", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "28px", "fontWeight": "400"}],
+                    "price-display": ["20px", {"lineHeight": "24px", "fontWeight": "600"}],
+                    "body-md": ["16px", {"lineHeight": "24px", "fontWeight": "400"}],
+                    "headline-xl-mobile": ["32px", {"lineHeight": "40px", "fontWeight": "400"}],
+                    "headline-xl": ["48px", {"lineHeight": "56px", "fontWeight": "400"}],
+                    "headline-md": ["24px", {"lineHeight": "32px", "fontWeight": "400"}]
+            }
+          },
+        },
+      }
+    </script>
+<style>
+        .ar-overlay-pulse {
+            animation: pulse 3s infinite ease-in-out;
+        }
+        @keyframes pulse {
+            0%, 100% { opacity: 0.4; }
+            50% { opacity: 0.6; }
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: transparent; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #B89C7E; border-radius: 10px; }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="bg-ivory-base text-charcoal-brown font-body-md selection:bg-champagne-gold/30">
+<!-- TopNavBar -->
+<nav class="fixed top-0 w-full z-50 bg-surface/90 backdrop-blur-xl border-b border-stone-gray shadow-sm flex justify-between items-center h-20 px-64 w-full mx-auto">
+<div class="flex items-center gap-12">
+<span class="font-headline-md text-headline-md text-charcoal-brown uppercase tracking-wider">Solvea Atelier</span>
+<div class="hidden md:flex gap-8 items-center">
+<a class="font-label-lg text-label-lg text-charcoal-brown dark:text-on-surface-variant hover:text-muted-bronze transition-colors" href="#">Catalog</a>
+<a class="font-label-lg text-label-lg text-charcoal-brown dark:text-on-surface-variant hover:text-muted-bronze transition-colors" href="#">New Arrivals</a>
+<a class="font-label-lg text-label-lg text-charcoal-brown dark:text-on-surface-variant hover:text-muted-bronze transition-colors" href="#">Sale</a>
+<a class="font-label-lg text-label-lg text-charcoal-brown dark:text-on-surface-variant hover:text-muted-bronze transition-colors" href="#">About</a>
+<a class="font-label-lg text-label-lg text-charcoal-brown dark:text-on-surface-variant hover:text-muted-bronze transition-colors" href="#">Contacts</a>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4 text-charcoal-brown">
+<span class="material-symbols-outlined cursor-pointer hover:bg-surface-container-low p-2 rounded-full transition-all">favorite</span>
+<span class="material-symbols-outlined cursor-pointer hover:bg-surface-container-low p-2 rounded-full transition-all">shopping_bag</span>
+</div>
+<button class="bg-charcoal-brown text-on-primary px-6 py-2.5 font-label-lg text-label-lg hover:bg-primary-container active:scale-95 transition-all">Book Fitting</button>
+<!-- Language Switcher -->
+<div class="flex gap-2 ml-4 border-l border-stone-gray pl-4">
+<button class="text-label-md font-label-md text-muted-bronze">EN</button>
+<button class="text-label-md font-label-md text-stone-gray hover:text-charcoal-brown">RU</button>
+<button class="text-label-md font-label-md text-stone-gray hover:text-charcoal-brown">KZ</button>
+</div>
+</div>
+</nav>
+<main class="pt-32 pb-16 px-margin-desktop max-w-container-max mx-auto min-h-screen">
+<div class="grid grid-cols-12 gap-gutter">
+<!-- Left Side: Preview Canvas -->
+<div class="col-span-7 relative group">
+<div class="sticky top-32 bg-surface-white aspect-[3/4] shadow-xl border border-stone-gray overflow-hidden flex items-center justify-center">
+<!-- Base Photo Placeholder -->
+<div class="relative w-full h-full flex items-center justify-center bg-surface-container" id="preview-container">
+<img class="absolute inset-0 w-full h-full object-cover opacity-30" data-alt="A bright, minimalist studio setting with soft natural light streaming through a window. The floor is polished concrete, and the walls are a warm ivory. A subtle shadow of a person suggests where a user should upload their portrait for the AR try-on experience. The overall mood is sophisticated and clean, matching a luxury boutique aesthetic." id="user-photo" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC-2E7lWkUaLxrVndeeTFLWGbsPt6unQlB4uqqksXwMA9FECYazrh-UJSrZtFU1zerp4oSVsc18O9SW7qU_DjVhihZwdnKvMCdnwbwcXmxELsgksTJFCnFtuZ4Eq2JXEGTAZVRj0E9WxymcMuh6ptbNziJXqt9GOKEkR-BxHefv2J1X_z2Hz9jgV_okapcsP9f9oVQp7eRIhHpHAvzwpv2gaWopFVqpVjft1r6g90En8_in37gtMngd9wgJVNQjEjYWlOAoicaDr2Bo"/>
+<!-- AR Coat Overlay -->
+<div class="absolute inset-0 z-10 flex items-center justify-center ar-overlay-pulse pointer-events-none" id="ar-overlay">
+<img class="w-[80%] h-auto drop-shadow-2xl" data-alt="A high-end, long-line cashmere coat in a deep charcoal brown color, rendered with realistic fabric textures. The coat is semi-transparent, showing subtle folds and draping as if it were being fitted onto a model. The lighting highlights the premium fibers and the elegant cut of the garment, appearing as a digital holographic layer for an augmented reality interface." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCfE_4iiqYmUSne6ODoITREBAiSMQzZ_qgi2hdMrFQITTVjllC8tfbggvD6g4If0QUrlVnIiEFqe5iaPSYA0fwqNFeq_Sp2ZJaiunDAkZ7hQ4yZDSVjaf5lHrRBsBSHkGhYbn9J2kGU1bwk_BzhMdRVZGk5V2bJYCNygAqe6eNl72aztrQzDwySk6aTzatxk_wSlX5PGgGCA20vZFF8uEZdckWQhpTG7d16Q7PS7dYvfIFw_HVsloaWlFWxwdJDp2gCeMcYgD0PUuFJ"/>
+</div>
+<!-- Initial Prompts -->
+<div class="z-20 flex flex-col items-center gap-6 text-center px-12" id="upload-prompts">
+<div class="w-20 h-20 rounded-full border border-stone-gray flex items-center justify-center bg-white/50 backdrop-blur-md">
+<span class="material-symbols-outlined text-4xl text-muted-bronze">add_a_photo</span>
+</div>
+<div>
+<h2 class="font-headline-md text-headline-md mb-2">Visualize the Fit</h2>
+<p class="font-body-md text-body-md text-graphite">Upload a portrait or use your camera to see how our collection fits you.</p>
+</div>
+<div class="flex gap-4">
+<button class="flex items-center gap-2 bg-charcoal-brown text-white px-6 py-3 font-label-lg text-label-lg transition-transform active:scale-95">
+<span class="material-symbols-outlined text-[20px]">upload</span> Upload photo
+                                </button>
+<button class="flex items-center gap-2 border border-charcoal-brown px-6 py-3 font-label-lg text-label-lg hover:bg-surface-container-low transition-transform active:scale-95">
+<span class="material-symbols-outlined text-[20px]">videocam</span> Open camera
+                                </button>
+</div>
+</div>
+<!-- Canvas Controls (Overlay) -->
+<div class="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-2 bg-white/80 backdrop-blur-md p-2 border border-stone-gray z-30 opacity-0 group-hover:opacity-100 transition-opacity">
+<button class="p-3 hover:bg-ivory-base text-charcoal-brown transition-colors" title="Zoom In"><span class="material-symbols-outlined">zoom_in</span></button>
+<button class="p-3 hover:bg-ivory-base text-charcoal-brown transition-colors" title="Zoom Out"><span class="material-symbols-outlined">zoom_out</span></button>
+<button class="p-3 hover:bg-ivory-base text-charcoal-brown transition-colors" title="Rotate"><span class="material-symbols-outlined">rotate_right</span></button>
+<button class="p-3 hover:bg-ivory-base text-charcoal-brown transition-colors" title="Reset"><span class="material-symbols-outlined">restart_alt</span></button>
+<div class="w-px bg-stone-gray mx-1"></div>
+<button class="px-4 py-2 text-label-md font-label-md hover:text-muted-bronze transition-colors">Before/After</button>
+</div>
+</div>
+</div>
+</div>
+<!-- Right Side: Controls & Info -->
+<div class="col-span-5 flex flex-col gap-8">
+<!-- Product Details -->
+<div class="flex flex-col gap-4">
+<div class="flex justify-between items-start">
+<div>
+<span class="text-label-md font-label-md text-muted-bronze uppercase tracking-widest mb-1 block">Solvea Signature</span>
+<h1 class="font-headline-lg text-headline-lg text-charcoal-brown">The Heritage Wool Coat</h1>
+</div>
+<span class="font-price-display text-price-display text-charcoal-brown">245,000 ₸</span>
+</div>
+<div class="flex items-center gap-4 text-label-md font-label-md text-graphite border-b border-stone-gray pb-4">
+<span>100% Loro Piana Wool</span>
+<div class="w-1 h-1 rounded-full bg-stone-gray"></div>
+<span>Hand-stitched in Astana</span>
+</div>
+</div>
+<!-- AI Size Suggestion -->
+<div class="bg-surface-container p-6 border-l-4 border-champagne-gold">
+<div class="flex items-center gap-3 mb-4">
+<span class="material-symbols-outlined text-muted-bronze">smart_toy</span>
+<span class="font-label-lg text-label-lg text-charcoal-brown">AI Smart Sizer</span>
+</div>
+<div class="grid grid-cols-2 gap-4">
+<div class="flex flex-col gap-1">
+<label class="text-label-md font-label-md text-graphite">Height (cm)</label>
+<input class="bg-surface-white border-stone-gray text-body-md p-3 focus:ring-0 focus:border-muted-bronze transition-colors" placeholder="175" type="number"/>
+</div>
+<div class="flex flex-col gap-1">
+<label class="text-label-md font-label-md text-graphite">Body Type</label>
+<select class="bg-surface-white border-stone-gray text-body-md p-3 focus:ring-0 focus:border-muted-bronze transition-colors">
+<option>Slim</option>
+<option>Regular</option>
+<option>Athletic</option>
+</select>
+</div>
+</div>
+<div class="mt-4 p-3 bg-white/50 text-label-md font-label-md flex justify-between items-center">
+<span class="text-graphite">Recommended size:</span>
+<span class="text-charcoal-brown font-bold">M (EU 48)</span>
+</div>
+</div>
+<!-- Product Thumbnails -->
+<div class="flex flex-col gap-3">
+<h3 class="font-label-lg text-label-lg text-charcoal-brown">Compare Colors</h3>
+<div class="flex gap-3 overflow-x-auto pb-2 custom-scrollbar">
+<button class="w-20 h-24 flex-shrink-0 border-2 border-muted-bronze p-1 group">
+<img class="w-full h-full object-cover" data-alt="Close-up thumbnail of a premium charcoal brown wool coat, showing the fine texture and neat stitching of the lapel. The background is a clean studio white, emphasizing the garment's silhouette and luxury appeal." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCZ99ES8kjtrR0AsmBZZic3NoU1abzNq_jesoNKxjkgafJgFRg7Y2LEqHyiEu0Tyzx6u86utuCZA0lkQ-eo1MKvtghH8OnAteexGh6qjjkY5d7h7sE43r_Fs_b_a75c-45pei-za6pZc4jbWgbpfnlp3HkIg87HZXY2SuHn1ntokmjhrEycnj94RKUlxY_PW9qROdeQ4o8jYDOF2NWHqGlkswF5PXsHDyCOWQdra1H3wykZW38RJIxkXsCoUb3nwnxmfctkFLZBxORH"/>
+</button>
+<button class="w-20 h-24 flex-shrink-0 border border-stone-gray p-1 hover:border-muted-bronze transition-colors group">
+<img class="w-full h-full object-cover" data-alt="Close-up thumbnail of a sophisticated camel-colored cashmere coat. The warm lighting highlights the soft, luxurious drape of the fabric and the subtle sheen of the natural fibers." src="https://lh3.googleusercontent.com/aida-public/AB6AXuDepplsgtYNIUgCf0Wf6plbDnZDuAOgJalO2YF14S2LFTWcuV4I2azlDZkQ787lfwRP_0KlmmEUbnZyN8cw2DyUXS4bF2P_7OpjmRM-tiFDnGxReap6YiFjjHbLKciZUzjsxNcfM3Y1eiFH1-Xs4YgO7zvla1P37o4g37U5dtFB_bx_dduAvAAEfjQB-aA42SwjbPZ84bfqR-t5dVia4-7wrsJlxFEn2euzKHKo--cMHLBZAXqKMLibiGHORBocT9GCBuy9m66U9CK-"/>
+</button>
+<button class="w-20 h-24 flex-shrink-0 border border-stone-gray p-1 hover:border-muted-bronze transition-colors group">
+<img class="w-full h-full object-cover" data-alt="Close-up thumbnail of a deep midnight blue bespoke coat. The image focuses on the heavy-duty buttons and the expert tailoring of the cuffs, set against a minimalist backdrop." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCOfD3LyXbOVijdFwm5MTMfJVs5YOFBOTIKlkbu0oaTTj_TAIo3-S3t26AU45x-4jZ6jmMHFqvdIciQILVxmCVc7iRlcPuLvKDzqvhVouFjzMg-SexpaDuSz_8JsQzrV-g8rRo_LHY4A2q-rIe7am6ygrWcBAMg7lkY4kNNfRm0qi2PodMMSJ-C0QZnd1UMaL5zt51cXhBYg3NqI_ylZdcTWJCa6L87nGsmLaW30ufS6GjadTDcKPIVYUx5AhfJdj6QIWszEvocQmKo"/>
+</button>
+</div>
+</div>
+<!-- Action Button -->
+<div class="mt-auto flex flex-col gap-4">
+<button class="w-full bg-charcoal-brown text-white py-5 font-label-lg text-label-lg hover:bg-primary-container transition-all active:scale-[0.98] flex items-center justify-center gap-3">
+<span class="material-symbols-outlined">calendar_month</span>
+                        Book a fitting in Astana
+                    </button>
+<div class="space-y-3">
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-muted-bronze text-[18px]">lock</span>
+<p class="text-label-md font-label-md text-graphite leading-tight">Your photo is used only for this preview and is never stored on our servers.</p>
+</div>
+<div class="flex items-start gap-3">
+<span class="material-symbols-outlined text-muted-bronze text-[18px]">info</span>
+<p class="text-label-md font-label-md text-graphite leading-tight">AR try-on is an approximate visual preview. For precise measurements, please book a personal consultation.</p>
+</div>
+</div>
+</div>
+</div>
+</div>
+</main>
+<!-- Footer -->
+<footer class="bg-charcoal-brown w-full py-16 border-t border-graphite">
+<div class="grid grid-cols-1 md:grid-cols-4 gap-gutter px-margin-desktop max-w-container-max mx-auto">
+<div class="flex flex-col gap-6">
+<span class="font-headline-md text-headline-md text-champagne-gold">Solvea Atelier</span>
+<p class="font-body-md text-body-md text-stone-gray">Elevating the standards of bespoke outerwear through technology and tradition.</p>
+</div>
+<div class="flex flex-col gap-4">
+<h4 class="font-label-lg text-label-lg text-surface-white">Shop</h4>
+<div class="flex flex-col gap-2">
+<a class="font-label-md text-label-md text-stone-gray hover:text-surface-white transition-colors" href="#">Catalog</a>
+<a class="font-label-md text-label-md text-stone-gray hover:text-surface-white transition-colors" href="#">Shipping &amp; Returns</a>
+<a class="font-label-md text-label-md text-stone-gray hover:text-surface-white transition-colors" href="#">Bespoke Process</a>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<h4 class="font-label-lg text-label-lg text-surface-white">Showroom</h4>
+<div class="flex flex-col gap-2">
+<p class="font-label-md text-label-md text-stone-gray">Dostyk Ave 10, Astana</p>
+<a class="font-label-md text-label-md text-champagne-gold font-bold" href="#">Astana Showroom</a>
+<a class="font-label-md text-label-md text-stone-gray hover:text-surface-white transition-colors" href="#">Contact Us</a>
+</div>
+</div>
+<div class="flex flex-col gap-4">
+<h4 class="font-label-lg text-label-lg text-surface-white">Legal</h4>
+<div class="flex flex-col gap-2">
+<a class="font-label-md text-label-md text-stone-gray hover:text-surface-white transition-colors" href="#">Terms of Service</a>
+<a class="font-label-md text-label-md text-stone-gray hover:text-surface-white transition-colors" href="#">Privacy Policy</a>
+</div>
+</div>
+</div>
+<div class="mt-16 pt-8 border-t border-graphite/30 text-center px-margin-desktop max-w-container-max mx-auto">
+<p class="font-label-md text-label-md text-stone-gray">© 2024 Solvea Atelier Boutique. All rights reserved.</p>
+</div>
+</footer>
+<script>
+        // Simple Interaction logic
+        const uploadBtn = document.querySelector('button:contains("Upload photo")');
+        const cameraBtn = document.querySelector('button:contains("Open camera")');
+        const overlay = document.getElementById('ar-overlay');
+        const promptScreen = document.getElementById('upload-prompts');
+        const userPhoto = document.getElementById('user-photo');
+
+        // Note: contains selector is not standard vanilla, using text check for demo
+        document.querySelectorAll('button').forEach(btn => {
+            if(btn.textContent.includes('Upload photo') || btn.textContent.includes('Open camera')) {
+                btn.addEventListener('click', () => {
+                    promptScreen.classList.add('hidden');
+                    overlay.classList.remove('ar-overlay-pulse');
+                    overlay.style.opacity = '1';
+                    userPhoto.classList.remove('opacity-30');
+                    userPhoto.style.opacity = '1';
+                    
+                    // Mock interaction
+                    alert("System: Accessing media device...");
+                });
+            }
+        });
+
+        // Toggle Before/After
+        const toggleBtn = document.querySelector('button:contains("Before/After")');
+        let isOverlayVisible = true;
+        document.querySelectorAll('button').forEach(btn => {
+            if(btn.textContent.includes('Before/After')) {
+                btn.addEventListener('mousedown', () => {
+                    overlay.style.opacity = '0';
+                });
+                btn.addEventListener('mouseup', () => {
+                    overlay.style.opacity = '1';
+                });
+                btn.addEventListener('mouseleave', () => {
+                    overlay.style.opacity = '1';
+                });
+            }
+        });
+    </script>
+</body></html>

@@ -1,87 +1,215 @@
-const {useState,useEffect,useRef,useCallback} = React;
+const {useState, useEffect, useRef} = React;
 
-// ── Header ──
-function Header({onNav,route,cartCount,wishCount,onCart}) {
-  const [scrolled,setScrolled] = useState(false);
-  useEffect(()=>{
-    const h=()=>setScrolled(window.scrollY>40);
-    window.addEventListener('scroll',h);return ()=>window.removeEventListener('scroll',h);
-  },[]);
+function Header({route, onNav, onJump, cartCount, wishCount, onCart}) {
+  const [menuOpen, setMenuOpen] = useState(false);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => setScrolled(window.scrollY > 16);
+    handleScroll();
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
+
+  const nav = [
+    ['catalog', 'Каталог'],
+    ['new', 'Новинки'],
+    ['sale', 'Sale'],
+    ['about', 'О нас'],
+    ['contact', 'Контакты'],
+  ];
+
+  const go = key => {
+    setMenuOpen(false);
+    key === 'catalog' ? onNav('catalog') : onJump(key);
+  };
+
   return (
-    <header className={`site-header ${scrolled?'scrolled':''}`}>
+    <header className={`site-header ${scrolled ? 'scrolled' : ''}`}>
       <div className="header-inner">
-        <div className="logo" onClick={()=>onNav('home')} style={{display: 'flex', alignItems: 'center', cursor: 'pointer'}}>
-          <img src="logo.png" alt="Solvea Atelier" style={{height: 120, margin: '-20px 0', transform: 'scale(1.4)', transformOrigin: 'left center'}} />
-        </div>
-        <nav className="main-nav">
-          <a className={route==='home'?'active':''} onClick={()=>onNav('home')}>Главная</a>
-          <a className={route==='catalog'?'active':''} onClick={()=>onNav('catalog')}>Каталог</a>
-          <a className={route==='wishlist'?'active':''} onClick={()=>onNav('wishlist')}>Избранное</a>
+        <button className="mobile-menu" onClick={() => setMenuOpen(v => !v)} aria-label="Открыть меню">
+          <IconMenu size={21}/>
+        </button>
+        <button className="brand-lockup" onClick={() => onNav('home')} aria-label="Solvea Atelier">
+          <img src="logo.png" alt="" />
+        </button>
+        <nav className={`main-nav ${menuOpen ? 'open' : ''}`}>
+          {nav.map(([key, label]) => (
+            <button key={key} className={route === key ? 'active' : ''} onClick={() => go(key)}>
+              {label}
+            </button>
+          ))}
         </nav>
         <div className="header-actions">
-          <button className="icon-btn" onClick={()=>onNav('wishlist')}>
+          <button className="header-search" aria-label="Поиск">
+            <IconSearch size={17}/>
+            <span>Поиск</span>
+          </button>
+          <button className="icon-btn" onClick={() => onNav('wishlist')} aria-label="Избранное">
             <IconHeart filled={false} size={18}/>
-            {wishCount>0&&<span className="badge">{wishCount}</span>}
+            {wishCount > 0 && <span className="badge">{wishCount}</span>}
           </button>
-          <button className="icon-btn" onClick={onCart}>
+          <button className="icon-btn" onClick={onCart} aria-label="Корзина">
             <IconBag size={18}/>
-            {cartCount>0&&<span className="badge">{cartCount}</span>}
+            {cartCount > 0 && <span className="badge">{cartCount}</span>}
           </button>
+          <button className="fit-btn" onClick={() => onJump('contact')}>Записаться</button>
         </div>
       </div>
     </header>
   );
 }
 
-// ── Hero ──
-function Hero({onNav}) {
+function Hero({onNav, onJump}) {
   return (
     <section className="hero">
-      <div className="hero-bg"><img src={HERO_IMG} alt="Solvea Atelier boutique"/></div>
-      <div className="hero-overlay"/>
-      <div className="hero-content">
-        <div className="label-gold">Осень / Зима 2026</div>
-        <h1 className="heading-xl">Стиль<br/>и комфорт<br/>в деталях</h1>
-        <p style={{color:'var(--text-muted)',fontSize:15,maxWidth:380,lineHeight:1.7,marginBottom:8}}>
-          Женская одежда, кожаные куртки, тренчи и обувь.
+      <div className="hero-copy">
+        <p className="eyebrow">Solvea Atelier · Астана</p>
+        <h1>Шубы и зимняя верхняя одежда в Астане</h1>
+        <p className="hero-lede">
+          Премиальные материалы, примерка в бутике и персональная консультация перед покупкой.
         </p>
-        <button className="hero-cta" onClick={()=>onNav('catalog')}>
-          Смотреть коллекцию <IconArrow size={14}/>
-        </button>
+        <div className="hero-actions">
+          <button className="btn-primary" onClick={() => onNav('catalog')}>Смотреть каталог <IconArrow size={16}/></button>
+          <button className="btn-secondary" onClick={() => onJump('contact')}>Записаться на примерку</button>
+        </div>
+        <div className="trust-row">
+          <span>Астана</span>
+          <span>Примерка в бутике</span>
+          <span>Доставка и консультация</span>
+        </div>
+      </div>
+      <div className="hero-media">
+        <img src={HERO_IMG} alt="Женская зимняя верхняя одежда Solvea Atelier" />
+        <div className="hero-note">
+          <strong>AW 2026</strong>
+          <span>Шубы, дубленки, кожа, тренчи и обувь</span>
+        </div>
       </div>
     </section>
   );
 }
 
-// ── Marquee ──
-function Marquee() {
-  const t = 'КОЖАНЫЕ КУРТКИ · ТРЕНЧИ · ПАЛЬТО · ОБУВЬ · РАСПРОДАЖА ШУБ · АСТАНА · ';
+function CategoryShortcuts({onNav}) {
   return (
-    <div className="marquee-strip">
-      <div className="marquee-track">
-        <span>{t}{t}{t}{t}</span>
+    <section className="section tight" id="new">
+      <div className="container">
+        <div className="section-head">
+          <div>
+            <p className="eyebrow">Категории</p>
+            <h2>Быстрый выбор</h2>
+          </div>
+          <button className="text-link" onClick={() => onNav('catalog')}>Весь каталог <IconArrow size={14}/></button>
+        </div>
+        <div className="category-grid">
+          {CATEGORIES.map(cat => (
+            <button className="category-tile" key={cat.name} onClick={() => onNav('catalog')}>
+              <img src={cat.image} alt={cat.name}/>
+              <span>{cat.name}</span>
+              <small>{cat.note}</small>
+            </button>
+          ))}
+        </div>
       </div>
-    </div>
+    </section>
   );
 }
 
-// ── Featured Section ──
-function Featured({onProduct}) {
+function ProductCard({product, onOpen, liked, onLike, onAR}) {
   return (
-    <section className="section">
+    <article className="product-card">
+      <div className="product-image" onClick={() => onOpen(product)}>
+        <img src={product.img} alt={product.name} loading="lazy"/>
+        <span className={`status-pill ${product.status.toLowerCase()}`}>{product.status}</span>
+        <button className={`wishlist-btn ${liked ? 'liked' : ''}`} onClick={e => {e.stopPropagation(); onLike(product.id);}} aria-label="Добавить в избранное">
+          <IconHeart filled={liked} size={17}/>
+        </button>
+      </div>
+      <div className="product-card-body">
+        <div className="product-meta">
+          <span>{product.category}</span>
+          <span>{product.availability}</span>
+        </div>
+        <button className="product-name" onClick={() => onOpen(product)}>{product.name}</button>
+        <div className="product-material">{product.mat}</div>
+        <div className="product-sizes">Размеры: {product.sizes}</div>
+        <div className="product-card-bottom">
+          <strong>{formatPrice(product.price)}</strong>
+          <div className="card-actions">
+            <button onClick={() => onAR(product)} aria-label="AR примерка"><IconCamera size={15}/></button>
+            <button onClick={() => onOpen(product)}>Детали</button>
+          </div>
+        </div>
+      </div>
+    </article>
+  );
+}
+
+function FeaturedProducts({onProduct, wishlist, onLike, onAR}) {
+  return (
+    <section className="section" id="featured">
       <div className="container">
-        <div className="label" style={{marginBottom:16}}>Избранное из коллекции</div>
-        <h2 className="heading-lg" style={{marginBottom:48}}>Новые поступления</h2>
-        <div className="featured-grid">
-          {PRODUCTS.slice(0,2).map(p=>(
-            <div key={p.id} className="featured-card" onClick={()=>onProduct(p)}>
-              <img src={p.img} alt={p.name}/>
-              <div className="featured-card-overlay"/>
-              <div className="featured-card-content">
-                <div className="label-gold" style={{marginBottom:8}}>{p.mat}</div>
-                <div className="heading-md" style={{color:'#F5F2EC'}}>{p.name}</div>
-                <div style={{marginTop:8,color:'var(--gold)',fontSize:16}}>{formatPrice(p.price)}</div>
-              </div>
+        <div className="section-head">
+          <div>
+            <p className="eyebrow">Новые поступления</p>
+            <h2>Сравнить модели</h2>
+          </div>
+          <button className="text-link">Подбор по размеру</button>
+        </div>
+        <div className="product-grid featured-products">
+          {PRODUCTS.map(product => (
+            <ProductCard
+              key={product.id}
+              product={product}
+              onOpen={onProduct}
+              liked={wishlist.has(product.id)}
+              onLike={onLike}
+              onAR={onAR}
+            />
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function SaleBand({onNav}) {
+  return (
+    <section className="sale-band" id="sale">
+      <div className="container sale-inner">
+        <div>
+          <p className="eyebrow">Season sale</p>
+          <h2>Распродажа шуб и дубленок</h2>
+          <p>Поможем подобрать модель под погоду, рост, посадку и образ жизни.</p>
+        </div>
+        <button className="btn-primary" onClick={() => onNav('catalog')}>Открыть подборку</button>
+      </div>
+    </section>
+  );
+}
+
+function ServiceSection({onJump}) {
+  const services = [
+    ['Примерка', 'Запись в бутике на Мангилик Ел 36/1 с консультацией по посадке и размеру.'],
+    ['Доставка', 'Доступны доставка и самовывоз после подтверждения заказа.'],
+    ['Подгонка', 'Подскажем по длине, посадке и возможной корректировке изделия.'],
+    ['Уход', 'Рекомендации по хранению меха, кожи и зимней верхней одежды.'],
+  ];
+
+  return (
+    <section className="section service-section" id="about">
+      <div className="container service-layout">
+        <div className="service-intro">
+          <p className="eyebrow">Сервис бутика</p>
+          <h2>Покупка высокой стоимости требует спокойного выбора</h2>
+          <p>Мы делаем акцент на примерке, понятных деталях изделия и прямой связи с консультантом.</p>
+          <button className="btn-secondary" onClick={() => onJump('contact')}>Связаться с бутиком</button>
+        </div>
+        <div className="service-grid">
+          {services.map(([title, text]) => (
+            <div className="service-item" key={title}>
+              <h3>{title}</h3>
+              <p>{text}</p>
             </div>
           ))}
         </div>
@@ -90,222 +218,330 @@ function Featured({onProduct}) {
   );
 }
 
-// ── Brand Story ──
-function BrandStory() {
+function LocationContact() {
   return (
-    <section className="section" style={{background:'var(--bg-card)'}}>
-      <div className="container">
-        <div className="brand-story">
-          <div className="brand-story-img"><img src={STORY_IMG} alt="Atelier"/></div>
-          <div>
-            <div className="label-gold" style={{marginBottom:16}}>О нас</div>
-            <h2 className="heading-lg" style={{marginBottom:16}}>Solvea Atelier</h2>
-            <blockquote>«Стиль и комфорт в каждой детали.»</blockquote>
-            <p className="label" style={{marginTop:16}}>Астана, Казахстан</p>
-            <p style={{color:'var(--text-muted)',fontSize:14,lineHeight:1.7,marginTop:24,maxWidth:400}}>
-              Бутик женской одежды. Кожаные куртки, тренчи, пальто и обувь. Распродажа шуб, дубленок, пуховиков.
-            </p>
+    <section className="section contact-section" id="contact">
+      <div className="container contact-layout">
+        <div>
+          <p className="eyebrow">Контакты</p>
+          <h2>Бутик Solvea Atelier</h2>
+          <p className="contact-address"><IconMap size={18}/> {CONTACT_ADDRESS}</p>
+          <p className="muted">Запишитесь на примерку, уточните наличие размера или попросите консультанта прислать дополнительные фото изделия.</p>
+          <div className="contact-actions">
+            <a className="btn-primary" href="https://wa.me/77000000000" target="_blank" rel="noreferrer">WhatsApp</a>
+            <a className="btn-secondary" href="https://instagram.com/" target="_blank" rel="noreferrer">Instagram</a>
           </div>
+        </div>
+        <div className="map-panel">
+          <span>Astana</span>
+          <strong>Мангилик Ел 36/1</strong>
+          <small>Бутик · примерка · консультация</small>
         </div>
       </div>
     </section>
   );
 }
 
-// ── Product Card ──
-function ProductCard({product,onOpen,liked,onLike,onAR}) {
-  return (
-    <div className="product-card" onClick={()=>onOpen(product)}>
-      <div className="product-card-img">
-        <img src={product.img} alt={product.name} loading="lazy"/>
-        <button className={`product-card-wishlist ${liked?'liked':''}`}
-          onClick={e=>{e.stopPropagation();onLike(product.id);}}>
-          <IconHeart filled={liked} size={16}/>
-        </button>
-      </div>
-      <div className="product-card-info">
-        <div className="product-card-name">{product.name}</div>
-        <div className="product-card-material">{product.mat}</div>
-        <div className="product-card-price">{formatPrice(product.price)}</div>
-      </div>
-      <button className="product-card-ar" onClick={e=>{e.stopPropagation();onAR(product);}}>
-        <IconCamera size={12}/> AR
-      </button>
-    </div>
-  );
-}
+function Catalog({onProduct, wishlist, onLike, onAR}) {
+  const [category, setCategory] = useState('Все');
+  const [material, setMaterial] = useState('Все');
+  const [sort, setSort] = useState('new');
 
-// ── Catalog ──
-function Catalog({onProduct,wishlist,onLike,onAR}) {
-  const [filter,setFilter] = useState('all');
-  const mats = ['all','Соболь','Рысь','Норка','Лиса','Шиншилла'];
-  const filtered = filter==='all' ? PRODUCTS : PRODUCTS.filter(p=>p.mat.toLowerCase().includes(filter.toLowerCase()));
+  const categories = ['Все', ...new Set(PRODUCTS.map(p => p.category))];
+  const materials = ['Все', ...new Set(PRODUCTS.map(p => p.mat))];
+
+  const filtered = PRODUCTS
+    .filter(p => category === 'Все' || p.category === category)
+    .filter(p => material === 'Все' || p.mat === material)
+    .sort((a, b) => {
+      if (sort === 'price-asc') return a.price - b.price;
+      if (sort === 'price-desc') return b.price - a.price;
+      return PRODUCTS.indexOf(a) - PRODUCTS.indexOf(b);
+    });
+
   return (
-    <section className="section" style={{paddingTop:120}}>
+    <section className="section catalog-page">
       <div className="container">
-        <div className="catalog-header">
+        <div className="catalog-title">
           <div>
-            <div className="label" style={{marginBottom:12}}>Коллекция ОЗ 2026</div>
-            <h2 className="heading-lg">Каталог</h2>
+            <p className="eyebrow">Каталог AW 2026</p>
+            <h2>Подберите модель для примерки</h2>
           </div>
-          <div className="filter-bar">
-            {mats.map(m=>(
-              <button key={m} className={`filter-btn ${filter===m?'active':''}`}
-                onClick={()=>setFilter(m)}>{m==='all'?'Все':m}</button>
+          <span>{filtered.length} моделей</span>
+        </div>
+        <div className="catalog-layout">
+          <aside className="filter-panel">
+            <div className="filter-block">
+              <label>Категория</label>
+              <div className="chip-list">
+                {categories.map(item => (
+                  <button key={item} className={category === item ? 'active' : ''} onClick={() => setCategory(item)}>{item}</button>
+                ))}
+              </div>
+            </div>
+            <div className="filter-block">
+              <label>Материал</label>
+              <select value={material} onChange={e => setMaterial(e.target.value)}>
+                {materials.map(item => <option key={item}>{item}</option>)}
+              </select>
+            </div>
+            <div className="filter-block">
+              <label>Сортировка</label>
+              <select value={sort} onChange={e => setSort(e.target.value)}>
+                <option value="new">Новинки</option>
+                <option value="price-asc">Цена по возрастанию</option>
+                <option value="price-desc">Цена по убыванию</option>
+              </select>
+            </div>
+            <div className="filter-note">Фильтры можно расширить по размеру, цвету, длине и наличию при увеличении ассортимента.</div>
+          </aside>
+          <div className="product-grid">
+            {filtered.map(product => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onOpen={onProduct}
+                liked={wishlist.has(product.id)}
+                onLike={onLike}
+                onAR={onAR}
+              />
             ))}
           </div>
         </div>
-        <div className="product-grid">
-          {filtered.map((p,i)=>(
-            <div key={p.id} className="fade-up" style={{animationDelay:`${i*100}ms`}}>
-              <ProductCard product={p} onOpen={onProduct} liked={wishlist.has(p.id)}
-                onLike={onLike} onAR={onAR}/>
-            </div>
-          ))}
-        </div>
       </div>
     </section>
   );
 }
 
-// ── Product Detail ──
-function ProductDetail({product,onClose,onAR,onCart,liked,onLike}) {
-  if(!product) return null;
-  const p = product;
+function ProductDetail({product, onClose, onAR, onCart, liked, onLike}) {
+  if (!product) return null;
+
   const specs = [
-    ['Материал',p.mat],['Происхождение',p.origin],
-    ['Размеры',p.sizes],['Магазин','Париж, Франция'],
+    ['Материал', product.mat],
+    ['Размеры', product.sizes],
+    ['Цвет', product.color],
+    ['Длина', product.length],
+    ['Происхождение', product.origin],
+    ['Наличие', product.availability],
   ];
+
   return (
     <div className="product-detail">
-      <button className="detail-close" onClick={onClose}><IconX size={20}/></button>
-      <div className="product-detail-grid">
-        <div className="product-gallery">
-          <div className="product-gallery-main">
-            <img src={p.img} alt={p.name} style={{animation:'scaleIn 500ms var(--ease)'}}/>
-          </div>
+      <button className="detail-close" onClick={onClose} aria-label="Закрыть"><IconX size={20}/></button>
+      <div className="detail-grid">
+        <div className="detail-gallery">
+          <img src={product.img} alt={product.name}/>
         </div>
-        <div className="product-info">
-          <div>
-            <div className="label-gold">Образ {p.look}</div>
-            <h2 className="heading-lg" style={{marginTop:8}}>{p.name}</h2>
-          </div>
-          <div className="product-price-big">{formatPrice(p.price)}</div>
-          <p className="product-desc">{p.desc}</p>
-          <div className="product-specs">
-            {specs.map(([k,v])=>(
-              <div key={k} className="spec-row">
-                <span className="spec-key">{k}</span><span className="spec-val">{v}</span>
+        <aside className="detail-panel">
+          <p className="eyebrow">Образ {product.look}</p>
+          <h2>{product.name}</h2>
+          <div className="detail-price">{formatPrice(product.price)}</div>
+          <p className="detail-desc">{product.desc}</p>
+          <div className="spec-table">
+            {specs.map(([key, value]) => (
+              <div className="spec-row" key={key}>
+                <span>{key}</span>
+                <strong>{value}</strong>
               </div>
             ))}
           </div>
-          <div className="product-actions">
-            <button className="btn-primary" onClick={()=>onCart(p)}>
-              <IconBag size={16}/> В корзину
-            </button>
-            <button className="btn-secondary" onClick={()=>onAR(p)}>
-              <IconCamera size={16}/> Примерить AR
-            </button>
+          <div className="care-note">
+            <strong>Уход:</strong> {product.care}
           </div>
-          <button style={{alignSelf:'flex-start',display:'flex',alignItems:'center',gap:8,
-            color:liked?'var(--gold)':'var(--text-muted)',fontSize:13,marginTop:8,
-            transition:'color 300ms var(--ease)'}}
-            onClick={()=>onLike(p.id)}>
-            <IconHeart filled={liked} size={16}/> {liked?'В избранном':'Добавить в избранное'}
+          <div className="detail-actions">
+            <button className="btn-primary" onClick={() => onCart(product)}><IconBag size={16}/> Добавить в заявку</button>
+            <button className="btn-secondary" onClick={() => onAR(product)}><IconCamera size={16}/> AR примерка</button>
+          </div>
+          <button className={`detail-like ${liked ? 'liked' : ''}`} onClick={() => onLike(product.id)}>
+            <IconHeart filled={liked} size={17}/> {liked ? 'В избранном' : 'Сохранить для сравнения'}
           </button>
-        </div>
+          <div className="purchase-trust">
+            <span>Примерка в бутике</span>
+            <span>Консультация по размеру</span>
+            <span>Доставка после подтверждения</span>
+          </div>
+        </aside>
       </div>
     </div>
   );
 }
 
-// ── AR Screen ──
-function ARScreen({product,onClose}) {
-  const [photo,setPhoto] = useState(null);
-  const [coatIdx,setCoatIdx] = useState(PRODUCTS.findIndex(p=>p.id===product.id));
-  const [pos,setPos] = useState({x:100,y:80});
-  const [scale,setScale] = useState(1);
+function ARScreen({product, onClose}) {
+  const [photo, setPhoto] = useState(null);
+  const [coatIdx, setCoatIdx] = useState(PRODUCTS.findIndex(p => p.id === product.id));
+  const [pos, setPos] = useState({x: 100, y: 80});
+  const [scale, setScale] = useState(1);
+  const [mode, setMode] = useState('ai'); // Default to AI mode
+  const [aiResult, setAiResult] = useState(null);
+  const [isGenerating, setIsGenerating] = useState(false);
+  const [error, setError] = useState(null);
+  const [showOriginal, setShowOriginal] = useState(false);
+
   const dragging = useRef(false);
-  const dragStart = useRef({x:0,y:0});
+  const dragStart = useRef({x: 0, y: 0});
   const fileRef = useRef(null);
+  const coat = PRODUCTS[coatIdx];
+
+  useEffect(() => {
+    setAiResult(null);
+    setError(null);
+  }, [coatIdx]);
 
   const onFile = e => {
-    const f = e.target.files[0]; if(!f) return;
-    const r = new FileReader();
-    r.onload = ev => setPhoto(ev.target.result);
-    r.readAsDataURL(f);
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      setPhoto(ev.target.result);
+      setAiResult(null);
+      setError(null);
+    };
+    reader.readAsDataURL(file);
   };
 
   const onMouseDown = e => {
+    if (mode !== 'manual') return;
     dragging.current = true;
-    dragStart.current = {x:e.clientX-pos.x, y:e.clientY-pos.y};
+    dragStart.current = {x: e.clientX - pos.x, y: e.clientY - pos.y};
     e.preventDefault();
   };
-  useEffect(()=>{
+
+  useEffect(() => {
     const onMove = e => {
-      if(!dragging.current) return;
-      setPos({x:e.clientX-dragStart.current.x, y:e.clientY-dragStart.current.y});
+      if (dragging.current) setPos({x: e.clientX - dragStart.current.x, y: e.clientY - dragStart.current.y});
     };
     const onUp = () => { dragging.current = false; };
-    window.addEventListener('mousemove',onMove);
-    window.addEventListener('mouseup',onUp);
-    return ()=>{window.removeEventListener('mousemove',onMove);window.removeEventListener('mouseup',onUp);};
-  },[]);
+    window.addEventListener('mousemove', onMove);
+    window.addEventListener('mouseup', onUp);
+    return () => {
+      window.removeEventListener('mousemove', onMove);
+      window.removeEventListener('mouseup', onUp);
+    };
+  }, []);
 
-  const coat = PRODUCTS[coatIdx];
+  const runAiTryOn = async () => {
+    if (!photo) return;
+    setIsGenerating(true);
+    setError(null);
+    try {
+      const response = await fetch('/api/try-on', {
+        method: 'POST',
+        headers: { 'content-type': 'application/json' },
+        body: JSON.stringify({
+          portraitDataUrl: photo,
+          productImageUrl: coat.img,
+          productName: coat.name,
+          material: coat.mat,
+        }),
+      });
+
+      const data = await response.json();
+      if (!response.ok) {
+        throw new Error(data.error || 'Ошибка ИИ-примерки.');
+      }
+      setAiResult(data.imageDataUrl);
+    } catch (err) {
+      setError(err.message || 'Произошла ошибка при генерации.');
+    } finally {
+      setIsGenerating(false);
+    }
+  };
 
   return (
     <div className="ar-overlay">
       <div className="ar-header">
-        <button onClick={onClose} style={{display:'flex',alignItems:'center',gap:8}}>
-          <IconBack size={18}/> <span className="label" style={{color:'var(--text)'}}>Назад</span>
-        </button>
-        <div className="label-gold">AR-Примерка</div>
-        <div className="label">{coat.name}</div>
+        <button onClick={onClose}><IconBack size={18}/> Назад</button>
+        <div className="ar-mode-tabs">
+          <button className={mode === 'ai' ? 'active' : ''} onClick={() => setMode('ai')}>ИИ Примерка ✨</button>
+          <button className={mode === 'manual' ? 'active' : ''} onClick={() => setMode('manual')}>Ручное наложение</button>
+        </div>
+        <span>{coat.name}</span>
       </div>
       <div className="ar-canvas-area">
         {!photo ? (
-          <div className="ar-upload-zone" onClick={()=>fileRef.current.click()}>
+          <button className="ar-upload-zone" onClick={() => fileRef.current.click()}>
             <input ref={fileRef} type="file" accept="image/*" hidden onChange={onFile}/>
             <IconUpload size={40}/>
-            <div className="label" style={{color:'var(--text)'}}>Загрузите ваше фото</div>
-            <div style={{fontSize:12,color:'var(--text-muted)',textAlign:'center',maxWidth:240}}>
-              Нажмите или перетащите фото, чтобы примерить изделие виртуально
-            </div>
-          </div>
+            <strong>Загрузите фото для примерки</strong>
+            <span>Мы создадим реалистичный образ с выбранной моделью с помощью ИИ.</span>
+          </button>
         ) : (
           <div className="ar-preview">
-            <img className="ar-user-photo" src={photo} alt="Your photo"/>
-            <div className="ar-coat-overlay" style={{
-              left:pos.x,top:pos.y,width:200*scale,
-              transform:`scale(${scale})`,transformOrigin:'top left',
-            }} onMouseDown={onMouseDown}>
-              <img src={coat.img} alt={coat.name}
-                style={{width:'100%',opacity:0.85,pointerEvents:'none'}}/>
-            </div>
+            {mode === 'manual' ? (
+              <>
+                <img className="ar-user-photo" src={photo} alt="Загруженное фото"/>
+                <div className="ar-coat-overlay" style={{left: pos.x, top: pos.y, width: 200 * scale}} onMouseDown={onMouseDown}>
+                  <img src={coat.img} alt={coat.name}/>
+                </div>
+              </>
+            ) : (
+              <>
+                <img className="ar-user-photo" src={showOriginal ? photo : (aiResult || photo)} alt="Результат примерки" style={{ opacity: (!aiResult && !isGenerating) ? 0.6 : 1 }}/>
+                
+                {!aiResult && !isGenerating && (
+                  <div className="ar-ai-prompt-overlay">
+                    <div className="ar-ai-glow"></div>
+                    <svg width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" style={{ marginBottom: 12, color: '#B89C7E' }}>
+                      <circle cx="12" cy="12" r="10"/>
+                      <path d="M12 8v4l3 3" strokeLinecap="round"/>
+                    </svg>
+                    <h3>Готово к ИИ-примерке</h3>
+                    <p>Искусственный интеллект органично наденет эту модель на ваше фото, учитывая освещение и позу.</p>
+                    <button className="ar-sparkle-btn" onClick={runAiTryOn}>
+                      <span>Создать ИИ-образ</span> ✨
+                    </button>
+                    {error && <div className="ar-error-callout">{error}</div>}
+                  </div>
+                )}
+
+                {isGenerating && (
+                  <div className="ar-loading-overlay">
+                    <div className="ar-spinner"></div>
+                    <div className="ar-ai-glow"></div>
+                    <p>Создаем реалистичную ИИ-примерку... Это может занять до минуты.</p>
+                  </div>
+                )}
+              </>
+            )}
           </div>
         )}
       </div>
       <div className="ar-controls">
         {photo && (
           <>
-            <button className="filter-btn" onClick={()=>setScale(s=>Math.max(0.3,s-0.1))}>
-              <IconZoom size={16} dir="out"/> −
-            </button>
-            <button className="filter-btn" onClick={()=>setScale(s=>Math.min(3,s+0.1))}>
-              <IconZoom size={16} dir="in"/> +
-            </button>
-            <button className="filter-btn" onClick={()=>{setPhoto(null);setPos({x:100,y:80});setScale(1);}}>
-              Новое фото
-            </button>
+            {mode === 'manual' ? (
+              <>
+                <button className="control-btn" onClick={() => setScale(s => Math.max(0.4, s - 0.1))}><IconZoom size={16} dir="out"/></button>
+                <button className="control-btn" onClick={() => setScale(s => Math.min(3, s + 0.1))}><IconZoom size={16} dir="in"/></button>
+              </>
+            ) : (
+              aiResult && (
+                <>
+                  <button 
+                    className="control-btn" 
+                    onMouseDown={() => setShowOriginal(true)} 
+                    onMouseUp={() => setShowOriginal(false)}
+                    onMouseLeave={() => setShowOriginal(false)}
+                    onTouchStart={() => setShowOriginal(true)}
+                    onTouchEnd={() => setShowOriginal(false)}
+                    style={{ fontWeight: 600 }}
+                  >
+                    Сравнить (зажмите)
+                  </button>
+                  <button className="control-btn" onClick={runAiTryOn} style={{ display: 'inline-flex', alignItems: 'center', gap: 6 }}>
+                    Перегенерировать
+                  </button>
+                </>
+              )
+            )}
+            <button className="control-btn" onClick={() => {setPhoto(null); setAiResult(null); setPos({x: 100, y: 80}); setScale(1); setError(null);}}>Новое фото</button>
           </>
         )}
         <div className="ar-coat-picker">
-          {PRODUCTS.map((p,i)=>(
-            <div key={p.id} className={`ar-coat-thumb ${i===coatIdx?'active':''}`}
-              onClick={()=>setCoatIdx(i)}>
+          {PRODUCTS.map((p, i) => (
+            <button key={p.id} className={i === coatIdx ? 'active' : ''} onClick={() => setCoatIdx(i)}>
               <img src={p.img} alt={p.name}/>
-            </div>
+            </button>
           ))}
         </div>
       </div>
@@ -313,70 +549,84 @@ function ARScreen({product,onClose}) {
   );
 }
 
-// ── Cart Sidebar ──
-function CartSidebar({items,onClose,onRemove}) {
-  const total = items.reduce((s,it)=>s+it.price,0);
+function CartSidebar({items, onClose, onRemove}) {
+  const total = items.reduce((sum, item) => sum + item.price, 0);
+
   return (
     <>
       <div className="cart-backdrop" onClick={onClose}/>
-      <div className="cart-panel">
+      <aside className="cart-panel">
         <div className="cart-header">
-          <h3 className="heading-md">Корзина</h3>
-          <button onClick={onClose}><IconX size={20}/></button>
+          <h3>Заявка</h3>
+          <button onClick={onClose} aria-label="Закрыть"><IconX size={20}/></button>
         </div>
         <div className="cart-items">
-          {items.length===0 && (
-            <div style={{textAlign:'center',padding:'60px 0',color:'var(--text-muted)'}}>
-              <IconBag size={32}/><p style={{marginTop:12}}>Корзина пуста</p>
+          {items.length === 0 && (
+            <div className="empty-state">
+              <IconBag size={34}/>
+              <p>В заявке пока нет изделий.</p>
             </div>
           )}
-          {items.map((it,i)=>(
-            <div key={i} className="cart-item">
-              <img className="cart-item-img" src={it.img} alt={it.name}/>
-              <div className="cart-item-info">
+          {items.map((item, index) => (
+            <div className="cart-item" key={`${item.id}-${index}`}>
+              <img src={item.img} alt={item.name}/>
+              <div>
+                <strong>{item.name}</strong>
+                <span>{item.mat}</span>
+                <small>Размеры: {item.sizes}</small>
                 <div>
-                  <div className="cart-item-name">{it.name}</div>
-                  <div className="label" style={{marginTop:4}}>{it.mat}</div>
-                </div>
-                <div style={{display:'flex',justifyContent:'space-between',alignItems:'center'}}>
-                  <span className="cart-item-price">{formatPrice(it.price)}</span>
-                  <span className="cart-item-remove" onClick={()=>onRemove(i)}>Удалить</span>
+                  <b>{formatPrice(item.price)}</b>
+                  <button onClick={() => onRemove(index)}>Удалить</button>
                 </div>
               </div>
             </div>
           ))}
         </div>
-        {items.length>0 && (
+        {items.length > 0 && (
           <div className="cart-footer">
             <div className="cart-total">
-              <span>Итого</span><span className="amount">{formatPrice(total)}</span>
+              <span>Итого</span>
+              <strong>{formatPrice(total)}</strong>
             </div>
-            <button className="btn-primary" style={{width:'100%'}}>Оформить заказ</button>
+            <button className="btn-primary">Отправить заявку</button>
+            <p>Консультант подтвердит наличие, примерку и условия доставки.</p>
           </div>
         )}
-      </div>
+      </aside>
     </>
   );
 }
 
-// ── Wishlist Page ──
-function WishlistPage({wishlist,onProduct,onLike}) {
-  const items = PRODUCTS.filter(p=>wishlist.has(p.id));
+function WishlistPage({wishlist, onProduct, onLike, onAR, onNav}) {
+  const items = PRODUCTS.filter(p => wishlist.has(p.id));
+
   return (
-    <section className="section" style={{paddingTop:120,minHeight:'80vh'}}>
+    <section className="section catalog-page">
       <div className="container">
-        <div className="label" style={{marginBottom:12}}>Личный кабинет</div>
-        <h2 className="heading-lg" style={{marginBottom:48}}>Избранное</h2>
-        {items.length===0 ? (
+        <div className="catalog-title">
+          <div>
+            <p className="eyebrow">Сравнение</p>
+            <h2>Избранное</h2>
+          </div>
+          <span>{items.length} сохранено</span>
+        </div>
+        {items.length === 0 ? (
           <div className="wishlist-empty">
             <IconHeart filled={false} size={40}/>
-            <p>Вы ещё не добавили изделия в избранное</p>
+            <p>Сохраняйте модели, чтобы сравнить материалы, размеры и цены перед примеркой.</p>
+            <button className="btn-primary" onClick={() => onNav('catalog')}>Перейти в каталог</button>
           </div>
         ) : (
           <div className="product-grid">
-            {items.map(p=>(
-              <ProductCard key={p.id} product={p} onOpen={onProduct}
-                liked={true} onLike={onLike} onAR={()=>{}}/>
+            {items.map(product => (
+              <ProductCard
+                key={product.id}
+                product={product}
+                onOpen={onProduct}
+                liked={true}
+                onLike={onLike}
+                onAR={onAR}
+              />
             ))}
           </div>
         )}
@@ -385,101 +635,116 @@ function WishlistPage({wishlist,onProduct,onLike}) {
   );
 }
 
-// ── Footer ──
-function Footer({onNav}) {
+function Footer({onNav, onJump}) {
   return (
     <footer className="site-footer">
-      <div className="container">
-        <div className="footer-grid">
-          <div className="footer-col">
-            <div className="footer-brand" style={{display: 'flex', alignItems: 'center'}}>
-              <img src="logo.png" alt="Solvea Atelier" style={{height: 160, marginBottom: 20, transform: 'scale(1.2)', transformOrigin: 'left center'}} />
-            </div>
-            <p className="footer-brand-desc">Женская одежда, кожаные куртки, тренчи и обувь.<br/>Мангилик Ел 36/1, Астана, Казахстан.</p>
-          </div>
-          <div className="footer-col">
-            <h4>Магазин</h4>
-            <a onClick={()=>onNav('catalog')}>Каталог</a>
-            <a>Новые поступления</a>
-            <a>Эдиции</a>
-          </div>
-          <div className="footer-col">
-            <h4>Дом</h4>
-            <a>О нас</a>
-            <a>Мастерская</a>
-            <a>Контакты</a>
-          </div>
-          <div className="footer-col">
-            <h4>Сервис</h4>
-            <a>Доставка</a>
-            <a>Примерка</a>
-            <a>AR-технология</a>
-          </div>
+      <div className="container footer-grid">
+        <div>
+          <img src="logo.png" alt="Solvea Atelier" />
+          <p>Женская верхняя одежда, шубы, дубленки, кожаные куртки, тренчи и обувь.</p>
         </div>
-        <div className="footer-bottom">
-          <span>© 2026 Solvea Atelier</span>
-          <span>Астана · Казахстан</span>
+        <div>
+          <h4>Магазин</h4>
+          <button onClick={() => onNav('catalog')}>Каталог</button>
+          <button onClick={() => onJump('new')}>Новинки</button>
+          <button onClick={() => onJump('sale')}>Sale</button>
+        </div>
+        <div>
+          <h4>Сервис</h4>
+          <button onClick={() => onJump('contact')}>Примерка</button>
+          <button onClick={() => onJump('about')}>Доставка</button>
+          <button onClick={() => onJump('about')}>Уход</button>
+        </div>
+        <div>
+          <h4>Адрес</h4>
+          <p>{CONTACT_ADDRESS}</p>
+          <small>© 2026 Solvea Atelier</small>
         </div>
       </div>
     </footer>
   );
 }
 
-// ═══════════════════════════════════════════════════════════
-// APP
-// ═══════════════════════════════════════════════════════════
 function App() {
-  const [route,setRoute] = useState('home');
-  const [detail,setDetail] = useState(null);
-  const [arProduct,setArProduct] = useState(null);
-  const [cartOpen,setCartOpen] = useState(false);
-  const [cart,setCart] = useState([]);
-  const [wishlist,setWishlist] = useState(new Set());
+  const [route, setRoute] = useState('home');
+  const [detail, setDetail] = useState(null);
+  const [arProduct, setArProduct] = useState(null);
+  const [cartOpen, setCartOpen] = useState(false);
+  const [cart, setCart] = useState([]);
+  const [wishlist, setWishlist] = useState(new Set());
 
-  const navigate = r => { setRoute(r); setDetail(null); window.scrollTo(0,0); };
+  const navigate = nextRoute => {
+    setRoute(nextRoute);
+    setDetail(null);
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  };
+
+  const jumpTo = id => {
+    setRoute('home');
+    setDetail(null);
+    setTimeout(() => document.getElementById(id)?.scrollIntoView({behavior: 'smooth', block: 'start'}), 50);
+  };
+
   const toggleLike = id => {
     setWishlist(prev => {
-      const n = new Set(prev);
-      n.has(id) ? n.delete(id) : n.add(id);
-      return n;
+      const next = new Set(prev);
+      next.has(id) ? next.delete(id) : next.add(id);
+      return next;
     });
   };
-  const addToCart = p => { setCart(prev=>[...prev,p]); setCartOpen(true); };
-  const removeFromCart = i => setCart(prev=>prev.filter((_,idx)=>idx!==i));
-  const openProduct = p => { setDetail(p); window.scrollTo(0,0); };
+
+  const openProduct = product => {
+    setDetail(product);
+    window.scrollTo({top: 0, behavior: 'smooth'});
+  };
+
+  const addToCart = product => {
+    setCart(prev => [...prev, product]);
+    setCartOpen(true);
+  };
 
   return (
     <>
-      <Header route={route} onNav={navigate} cartCount={cart.length}
-        wishCount={wishlist.size} onCart={()=>setCartOpen(true)}/>
+      <Header
+        route={route}
+        onNav={navigate}
+        onJump={jumpTo}
+        cartCount={cart.length}
+        wishCount={wishlist.size}
+        onCart={() => setCartOpen(true)}
+      />
 
-      {route==='home' && (
+      {route === 'home' && (
         <>
-          <Hero onNav={navigate}/>
-          <Marquee/>
-          <Featured onProduct={openProduct}/>
-          <BrandStory/>
-          <Catalog onProduct={openProduct} wishlist={wishlist} onLike={toggleLike}
-            onAR={p=>setArProduct(p)}/>
+          <Hero onNav={navigate} onJump={jumpTo}/>
+          <CategoryShortcuts onNav={navigate}/>
+          <FeaturedProducts onProduct={openProduct} wishlist={wishlist} onLike={toggleLike} onAR={setArProduct}/>
+          <SaleBand onNav={navigate}/>
+          <ServiceSection onJump={jumpTo}/>
+          <LocationContact/>
         </>
       )}
-      {route==='catalog' && (
-        <Catalog onProduct={openProduct} wishlist={wishlist} onLike={toggleLike}
-          onAR={p=>setArProduct(p)}/>
+      {route === 'catalog' && (
+        <Catalog onProduct={openProduct} wishlist={wishlist} onLike={toggleLike} onAR={setArProduct}/>
       )}
-      {route==='wishlist' && (
-        <WishlistPage wishlist={wishlist} onProduct={openProduct} onLike={toggleLike}/>
+      {route === 'wishlist' && (
+        <WishlistPage wishlist={wishlist} onProduct={openProduct} onLike={toggleLike} onAR={setArProduct} onNav={navigate}/>
       )}
 
-      <Footer onNav={navigate}/>
+      <Footer onNav={navigate} onJump={jumpTo}/>
 
       {detail && (
-        <ProductDetail product={detail} onClose={()=>setDetail(null)}
-          onAR={p=>setArProduct(p)} onCart={addToCart}
-          liked={wishlist.has(detail.id)} onLike={toggleLike}/>
+        <ProductDetail
+          product={detail}
+          onClose={() => setDetail(null)}
+          onAR={setArProduct}
+          onCart={addToCart}
+          liked={wishlist.has(detail.id)}
+          onLike={toggleLike}
+        />
       )}
-      {arProduct && <ARScreen product={arProduct} onClose={()=>setArProduct(null)}/>}
-      {cartOpen && <CartSidebar items={cart} onClose={()=>setCartOpen(false)} onRemove={removeFromCart}/>}
+      {arProduct && <ARScreen product={arProduct} onClose={() => setArProduct(null)}/>}
+      {cartOpen && <CartSidebar items={cart} onClose={() => setCartOpen(false)} onRemove={index => setCart(prev => prev.filter((_, i) => i !== index))}/>}
     </>
   );
 }
